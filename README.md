@@ -153,14 +153,3 @@ Antes de começar, certifique-se de ter instalado:
 | `POST` | `/upload` | 📤 Upload de arquivo | `file` (multipart) |
 | `GET` | `/files` | 📋 Listar arquivos | - |
 | `GET` | `/download/:name` | 📥 URL de download | `name` (filename) |
-
-## 🔧 Estrutura do Projeto
-
-```
-projetoDropBox/
-├── 📄 docker-compose.yml    # Configuração MinIO
-├── 📄 package.json          # Dependências Node.js
-├── 📄 server.js             # Backend Express
-├── 📄 index.html            # Interface web
-└── 📄 README.md             # Esta documentação
-```
