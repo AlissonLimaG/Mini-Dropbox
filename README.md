@@ -10,29 +10,6 @@ Este projeto implementa um **Mini Dropbox** com:
 - 🗄️ **Armazenamento** MinIO (compatível com S3) rodando em containers Docker
 - 🌐 **Interface Web** estática para interação com o usuário
 
-## 🏗️ Arquitetura do Sistema
-graph TD
-    A[Usuário] --> B[Frontend (HTML + JS)]
-    B --> C[Backend (Express.js)]
-    C --> D[MinIO (Armazenamento Distribuído)]
-    D -->|Docker| E[Container MinIO]
-
-    subgraph Interface Web
-        B
-    end
-
-    subgraph Serviço HTTP
-        C
-    end
-
-    subgraph Armazenamento Distribuído
-        D
-        E
-    end
-
-    C -->|Upload de Arquivos| D
-    C -->|Listagem de Arquivos| D
-    C -->|Download de Arquivos| D
 
 ## 📋 Pré-requisitos
 
@@ -149,28 +126,6 @@ Escolha uma das opções:
 </table>
 
 <div align="center">
-
-### 🔄 **Fluxo Visual do Teste**
-
-```mermaid
-graph LR
-    A[📤 Upload] --> B[✅ Confirmação]
-    B --> C[🔄 Atualizar Lista]
-    C --> D[📋 Ver Arquivo]
-    D --> E[📥 Download]
-    E --> F[🎉 Sucesso!]
-    
-    style A fill:#e3f2fd
-    style B fill:#e8f5e8
-    style C fill:#fff3e0
-    style D fill:#f3e5f5
-    style E fill:#fce4ec
-    style F fill:#e0f2f1
-```
-
-> **💡 Dica:** Teste com arquivos pequenos primeiro (< 1MB) para verificar se tudo está funcionando
-
-</div>
 
 ## 🛠️ Tecnologias Utilizadas
 
