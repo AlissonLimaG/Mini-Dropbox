@@ -11,106 +11,28 @@ Este projeto implementa um **Mini Dropbox** com:
 - 🌐 **Interface Web** estática para interação com o usuário
 
 ## 🏗️ Arquitetura do Sistema
+graph TD
+    A[Usuário] --> B[Frontend (HTML + JS)]
+    B --> C[Backend (Express.js)]
+    C --> D[MinIO (Armazenamento Distribuído)]
+    D -->|Docker| E[Container MinIO]
 
-```mermaid
-graph TB
-    subgraph "🌐 Cliente (Browser)"
-        UI[📱 index.html<br/>Interface Web]
-        JS[⚡ JavaScript<br/>Fetch API]
+    subgraph Interface Web
+        B
     end
-    
-    subgraph "⚙️ Backend (Node.js)"
-        SERVER[🖥️ server.js<br/>Express Server<br/>Port: 3000]
-        MULTER[📤 Multer<br/>File Upload Handler]
-        MINIO_SDK[🔌 MinIO SDK<br/>S3 Client]
-    end
-    
-    subgraph "🐳 Docker Cluster"
-        subgraph "🗄️ MinIO Storage"
-            MINIO1[📦 minio1<br/>Port: 9000/9001<br/>Console + API]
-            MINIO2[📦 minio2<br/>Storage Node]
-            MINIO3[📦 minio3<br/>Storage Node]
-            MINIO4[📦 minio4<br/>Storage Node]
-        end
-        
-        subgraph "💾 Data Storage"
-            BUCKET[🗂️ Bucket: 'files'<br/>Auto-created]
-            VOLUMES[(🔗 Docker Volumes<br/>minio1-data<br/>minio2-data<br/>minio3-data<br/>minio4-data)]
-        end
-    end
-    
-    %% Conexões principais
-    UI -->|HTTP Requests| SERVER
-    JS -->|fetch()| SERVER
-    SERVER -->|File Processing| MULTER
-    SERVER -->|S3 API Calls| MINIO_SDK
-    MINIO_SDK -->|S3 Protocol| MINIO1
-    
-    %% Cluster interno
-    MINIO1 -.->|Replication| MINIO2
-    MINIO1 -.->|Replication| MINIO3
-    MINIO1 -.->|Replication| MINIO4
-    
-    %% Storage
-    MINIO1 -->|Store Objects| BUCKET
-    MINIO2 -->|Store Objects| BUCKET
-    MINIO3 -->|Store Objects| BUCKET
-    MINIO4 -->|Store Objects| BUCKET
-    
-    BUCKET -->|Persist Data| VOLUMES
-    
-    %% Fluxos de dados
-    UI -.->|📤 Upload| SERVER
-    UI -.->|📋 List Files| SERVER
-    UI -.->|📥 Download URL| SERVER
-    
-    %% Estilos
-    classDef frontend fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef backend fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef storage fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    classDef data fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    
-    class UI,JS frontend
-    class SERVER,MULTER,MINIO_SDK backend
-    class MINIO1,MINIO2,MINIO3,MINIO4 storage
-    class BUCKET,VOLUMES data
-```
 
-### 🔄 Fluxo de Operações
+    subgraph Serviço HTTP
+        C
+    end
 
-```mermaid
-sequenceDiagram
-    participant U as 👤 Usuário
-    participant W as 🌐 Interface Web
-    participant S as ⚙️ Server.js
-    participant M as 🗄️ MinIO
-    
-    Note over U,M: 📤 Upload de Arquivo
-    U->>W: Seleciona arquivo
-    W->>S: POST /upload (multipart)
-    S->>S: Processa com Multer
-    S->>M: putObject() via SDK
-    M-->>S: Confirmação
-    S-->>W: JSON Response
-    W-->>U: Feedback visual
-    
-    Note over U,M: 📋 Listar Arquivos
-    U->>W: Clica "Atualizar Lista"
-    W->>S: GET /files
-    S->>M: listObjects() via SDK
-    M-->>S: Array de objetos
-    S-->>W: JSON com arquivos
-    W-->>U: Lista atualizada
-    
-    Note over U,M: 📥 Download de Arquivo
-    U->>W: Clica botão download
-    W->>S: GET /download/:name
-    S->>M: presignedGetObject()
-    M-->>S: URL temporária (10min)
-    S-->>W: JSON com URL
-    W->>W: window.open(url)
-    Note over U: Download direto do MinIO
-```
+    subgraph Armazenamento Distribuído
+        D
+        E
+    end
+
+    C -->|Upload de Arquivos| D
+    C -->|Listagem de Arquivos| D
+    C -->|Download de Arquivos| D
 
 ## 📋 Pré-requisitos
 
