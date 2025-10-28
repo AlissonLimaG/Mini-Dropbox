@@ -59,9 +59,6 @@ Antes de começar, certifique-se de ter instalado:
 
 ### 🖼️ Passo 3: Abrir a Interface Web
 
-Escolha uma das opções:
-
-#### 📁 Opção 1: Abrir diretamente no navegador
 - Clique duas vezes em `index.html` ou abra via navegador
 
 ## 🧪 Testando o Sistema
